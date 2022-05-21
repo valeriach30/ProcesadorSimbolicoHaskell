@@ -50,15 +50,3 @@ module EvalProp where
             let valor1 = evalProp ambiente prop1
                 valor2 = evalProp ambiente prop2
             in valor1 == valor2   
-
-    main :: IO ()  
-    main = do
-        -- prueba busca 
-        print(busca "a" [("a", True), ("b", True)])
-        -- prubea evalProp
-        let vp = Variable "p" 
-            vq = Variable "q" 
-            vr = Variable "r" 
-            prop1 = vp .&& vq .=> vq .|| vp .=> vp .&& vp
-            amb1 = [("p", True), ("q", False)]
-        print(evalProp amb1 prop1)
