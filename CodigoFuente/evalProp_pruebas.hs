@@ -8,7 +8,7 @@ main = do
     putStr("Ambiente: [('a', True), ('b', True)]\n")
     putStr("Resultado: ")
     print(busca "a" [("a", True), ("b", True)])
-    -- prubea evalProp
+    -- prueba evalProp
     putStr("--------------Prueba funcion evalProp--------------\n")
     let vp = Variable "p" 
         vq = Variable "q" 
