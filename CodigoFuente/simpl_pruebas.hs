@@ -29,7 +29,7 @@ main = do
         -- Para probar absorcion
         prop9 = (q .|| r) .|| ((q .|| r) .&& p)  
     putStr("\n------Prop1------\n")
-    putStr(imprimir(prop))
+    putStr(bonita prop)
     putStr("------Simplificacion------\n")
     putStr(bonita(simpl prop))
     
