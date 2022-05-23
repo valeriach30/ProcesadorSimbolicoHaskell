@@ -11,7 +11,10 @@ module Bonita where
                         case prop of
                         Constante _ -> False
                         Variable var -> False
-                        Negacion prop -> False
+                        Negacion prop -> 
+                            case padre of
+                            Negacion p1-> True
+                            _ -> False
                         Conjuncion p1 p2 -> 
                             case padre of
                             Conjuncion p1 p2 -> False
@@ -37,9 +40,10 @@ module Bonita where
                 Variable var -> var
                 Negacion prop1 -> 
                     let p1 = bonitaR prop1
-                        simbolo = "~ "
+                        r1 = rodear prop1 prop
+                        simbolo = "~"
                     in
-                        simbolo ++ p1
+                        if r1 == True then simbolo ++ par1 ++ p1 ++ par2 else simbolo ++ p1
                 Conjuncion prop1 prop2 -> 
                     let r1 = rodear prop1 prop
                         r2 = rodear prop2 prop
