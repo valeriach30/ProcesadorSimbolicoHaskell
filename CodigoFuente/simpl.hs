@@ -35,10 +35,15 @@ module Simpl where
                 --   DISTRIBUTIVA P ^ ( Q  v R ) <=>  (P ^  Q) v (P ^ R)
                 --   ABSORCION P ^ (P v Q) <=> P
                 Disyuncion p2 p3 -> 
-                    if p1 == imprimir(p2) then Variable p1 else ((prop1 .&& p2) .|| (prop1 .&& p3))
-                _ -> prop 
-            _ -> prop
-        
+                    case p2 of
+                    Variable p21 -> 
+                        case p3 of  
+                        Variable p31 -> if p1 == imprimir(p2) then Variable p1 else ((prop1 .&& p2) .|| (prop1 .&& p3))
+                        _ -> prop1 .&& unaSimp(unaSimp p2 .|| unaSimp p3)
+                    _ -> prop1 .&& unaSimp(unaSimp p2 .|| unaSimp p3)
+                _ -> prop1 .&& unaSimp(unaSimp prop1 .&& unaSimp prop2)
+            _ -> unaSimp prop1 .&& unaSimp prop2    
+                    
         Disyuncion prop1 prop2 ->
             case prop1 of
             Variable p1 ->
@@ -55,9 +60,15 @@ module Simpl where
                 -- REGLA 14 y 15: 
                 --   DISTRIBUTIVA P v ( Q ^ R ) <=>  (P v  Q) ^ (P v R)
                 --   ABSORCION P v (P ^ Q) <=> P
-                Conjuncion p2 p3 -> if p1 == imprimir(p2) then Variable p1 else ((prop1 .|| p2) .&& (prop1 .|| p3))
-                _ -> prop
-            _ -> prop
+                Conjuncion p2 p3 -> 
+                    case p2 of
+                    Variable p21 -> 
+                        case p3 of  
+                        Variable p31 -> if p1 == imprimir(p2) then Variable p1 else ((prop1 .|| p2) .&& (prop1 .|| p3))
+                        _ -> prop1 .|| unaSimp(unaSimp p2 .&& unaSimp p3)
+                    _ -> prop1 .|| unaSimp(unaSimp p2 .&& unaSimp p3)
+                _ -> prop1 .|| unaSimp(unaSimp prop1 .|| unaSimp prop2)
+            _ -> unaSimp prop1 .|| unaSimp prop2
         --- REGLA 16: IMPLICACION DISYUNCION P => Q <=> ~P v Q
         Implicacion prop1 prop2 -> (.~) prop1 .|| prop2
         _ -> prop
