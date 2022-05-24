@@ -28,6 +28,8 @@ main = do
         prop8 = p .=> (q .=> r) 
         -- Para probar absorcion
         prop9 = (q .|| r) .|| ((q .|| r) .&& p)  
+        -- Para probar absorcion negada P v (~P ^ Q) <=> P v Q 
+        prop10 = p .|| ((.~)p .&& q)
     putStr("\n------Prop1------\n")
     putStr(bonita prop)
     putStr("------Simplificacion------\n")
@@ -72,3 +74,8 @@ main = do
     putStr(bonita prop9)
     putStr("------Simplificacion------\n")
     putStr(bonita(simpl prop9))
+
+    putStr("\n\n------Prop10------\n")
+    putStr(bonita prop10)
+    putStr("------Simplificacion------\n")
+    putStr(bonita(simpl prop10))

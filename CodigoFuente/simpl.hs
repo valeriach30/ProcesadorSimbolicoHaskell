@@ -27,31 +27,40 @@ module Simpl where
             Constante p2 -> if p2 == True then prop1 else (Constante False)
             -- REGLA 7: IDEMPOTENCIA P ^ P <=> P
             Variable p2 -> if imprimir(prop1) == imprimir(prop2) then prop1 else simpl prop1 .&& simpl prop2
-            -- REGLA 8 y 9: 
+            -- REGLA 8, 9 y 10: 
             --   DISTRIBUTIVA P ^ ( Q  v R ) <=>  (P ^  Q) v (P ^ R)
             --   ABSORCION P ^ (P v Q) <=> P
-            Disyuncion p2 p3 -> if imprimir(prop1) == imprimir(p2) then prop1 else (simpl prop1 .&& simpl p2) .|| (simpl prop1 .&& simpl p3)
+            --   ABSORCION NEGADA P ^ (~P v Q) <=> P ^ Q 
+            Disyuncion p2 p3 -> 
+                if imprimir(prop1) == imprimir(p2) then prop1  -- absorcion normal
+                else 
+                    if imprimir((.~)prop1) == imprimir(p2) then prop1 .&& p3 -- absorcion negada
+                    else (simpl prop1 .&& simpl p2) .|| (simpl prop1 .&& simpl p3) -- distributiva
             _ -> simpl prop1 .&& simpl prop2
                     
         Disyuncion prop1 prop2 ->
             -- Evaluar el lado derecho
             case prop2 of
-            -- REGLA 10: INVERSOS P v ~P <=> T
+            -- REGLA 11: INVERSOS P v ~P <=> T
             Negacion p2 -> if imprimir(prop1) == imprimir(p2) then (Constante True) else simpl prop1 .|| simpl prop2
-            -- REGLA 11 y 12: 
+            -- REGLA 12 y 13: 
             --   NEUTRO P v F <=> P 
             --   DOMINACION P v T <=> V
             Constante p2 -> if p2 == False then prop1 else (Constante True)
-            -- REGLA 13: IDEMPOTENCIA P v P <=> P
+            -- REGLA 14: IDEMPOTENCIA P v P <=> P
             Variable p2 -> if imprimir(prop1) == imprimir(prop2) then prop1 else simpl prop1 .|| simpl prop2
-            -- REGLA 14 y 15: 
+            -- REGLA 15, 16 y 17: 
             --   DISTRIBUTIVA P v ( Q ^ R ) <=>  (P v  Q) ^ (P v R)
             --   ABSORCION P v (P ^ Q) <=> P
-            Conjuncion p2 p3 -> if imprimir(prop1) == imprimir(p2) then prop1 else simpl prop1 .|| simpl(simpl p2 .&& simpl p3)
-
+            --   ABSORCION NEGADA P v (~P ^ Q) <=> P v Q 
+            Conjuncion p2 p3 -> 
+                if imprimir(prop1) == imprimir(p2) then prop1 -- absorcion normal
+                else
+                    if imprimir((.~)prop1) == imprimir(p2) then prop1 .|| p3 -- absorcion negada
+                    else (simpl prop1 .|| simpl p2) .&& (simpl prop1 .|| simpl p3) -- distributiva 
             _ -> simpl prop1 .|| simpl prop2
 
-        --- REGLA 16: IMPLICACION DISYUNCION P => Q <=> ~P v Q
+        --- REGLA 18: IMPLICACION DISYUNCION P => Q <=> ~P v Q
         Implicacion prop1 prop2 -> (.~)(simpl prop1) .|| (simpl prop2)
         _ -> prop
     ;     
