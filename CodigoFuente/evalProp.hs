@@ -1,8 +1,6 @@
 module EvalProp where
     import Control.Exception  
     
-    -- Para correr en VSCODE: agregar la sintaxis a este archivo 
-    -- y comentar la linea donde se importa Sintax
     -- Importar modulo sintaxis
     import Sintax
 
